@@ -1,0 +1,66 @@
+site_name: Seawolf Marketplace
+site_description: "Official documentation for the Seawolf Marketplace project"
+site_author: "Seawolf Development Team"
+
+theme:
+  name: material
+  palette:
+
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+  logo: assets/1200px-Alaska_Anchorage_Seawolves_logo.svg.png    # optional logo (put under docs/assets)
+  favicon: assets/favicon.ico
+
+extra_css:
+  - stylesheets/uaa.css
+
+nav:
+  - Home: index.md
+  - DEV TEAM LOOK HERE TO ADD YOUR DOCS:
+    - 0. General Information: dev/general-info.md
+    - 1. Clone Docs: dev/clone.md
+    - 2. How to Add Docs:
+      - File Creation Location: dev/file-location.md
+      - Update TOC: dev/update-toc.md
+      - Add Documentation: dev/add-docs.md
+  - Getting Started: getting-started.md
+  - Technical Docs:
+    - Server Info: technical-docs/server-info.md
+
+plugins:
+  - search
+  # optional quality-of-life plugins
+  # - mkdocstrings
+  - tags
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg

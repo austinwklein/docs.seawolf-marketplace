@@ -1,0 +1,17 @@
+/* uaa.css : https://www.uaa.alaska.edu/about/university-advancement/umac/brand/image-standards/colors-and-fonts.cshtml  */
+
+/* ----- Light mode ----- */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #00583D;		/* UAA Green */
+  --md-primary-fg-color--light: #4ea685;	/* Medium Green */
+  --md-primary-fg-color--dark: #908e86;		/* Medium Gray */
+  --md-accent-fg-color: #00583D;
+}
+
+/* ----- Dark mode ----- */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #00583D;		/* UAA Green */
+  --md-primary-fg-color--light: #4ea685;	/* Medium Green */
+  --md-primary-fg-color--dark: #908e86;		/* Medium Gray */
+  --md-accent-fg-color: #00a676;
+}
