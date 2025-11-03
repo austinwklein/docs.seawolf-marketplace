@@ -4,25 +4,12 @@ on:
   push:
     branches:
       - main
-      - dev
-      - test
 
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest
     
     steps:
-      # Determine environment based on branch
-      - name: Set environment from branch
-        id: set_env
-        run: |
-          case "${{ github.ref_name }}" in
-            main) echo "environment=prod" >> $GITHUB_OUTPUT ;;
-            dev) echo "environment=dev" >> $GITHUB_OUTPUT ;;
-            test) echo "environment=test" >> $GITHUB_OUTPUT ;;
-            *) echo "environment=test" >> $GITHUB_OUTPUT ;;
-          esac
-      
       - name: Checkout documentation repository
         uses: actions/checkout@v4
 
@@ -36,12 +23,11 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             # Configuration
-            ENV=${{ steps.set_env.outputs.environment }}
-            DOCS_DIR=/opt/seawolf-marketplace/docs/$ENV
+            DOCS_DIR=/opt/seawolf-marketplace/docs
             REPO_URL=ssh://git@github.com/${{ github.repository }}.git
-            BRANCH=${{ github.ref_name }}
+            BRANCH=main
             
-            echo "=== Deploying documentation for $ENV environment ==="
+            echo "=== Deploying documentation ==="
             
             # Create docs directory if it doesn't exist
             mkdir -p "$DOCS_DIR"
@@ -73,5 +59,4 @@ jobs:
             
             # Verification
             echo "=== Deployment verification ==="
-            echo "Site directory: $(ls -la $DOCS_DIR/site | head -5)"
-            echo "Documentation deployed successfully to $ENV at $(date)"
+            echo "Site directory: $(ls -la
