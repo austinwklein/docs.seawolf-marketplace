@@ -42,16 +42,16 @@ nav:
       - Update TOC: dev/update-toc.md
       - Add Documentation: dev/add-docs.md
   - CI/CD Pipeline:
-      - Index: CI-CD/00-index.md
-      - Overview: CI-CD/01-cicd-overview.md
-      - Architecture: CI-CD/02-deployment-architecture.md
-      - GitHub Actions: CI-CD/03-github-actions-workflow.md
-      - Process Management: CI-CD/04-process-management-pm2.md
-      - Nginx Config: CI-CD/05-nginx-configuration.md
-      - Environments: CI-CD/06-environment-management.md
-      - Build Pipeline: CI-CD/07-build-pipeline.md
-      - Troubleshooting: CI-CD/08-troubleshooting.md
-      - Manual Operations: CI-CD/09-manual-operations.md
+      - Index: ci-cd/00-index.md
+      - Overview: ci-cd/01-cicd-overview.md
+      - Architecture: ci-cd/02-deployment-architecture.md
+      - GitHub Actions: ci-cd/03-github-actions-workflow.md
+      - Process Management: ci-cd/04-process-management-pm2.md
+      - Nginx Config: ci-cd/05-nginx-configuration.md
+      - Environments: ci-cd/06-environment-management.md
+      - Build Pipeline: ci-cd/07-build-pipeline.md
+      - Troubleshooting: ci-cd/08-troubleshooting.md
+      - Manual Operations: ci-cd/09-manual-operations.md
   - Getting Started: getting-started.md
   - Technical Docs:
     - Server Info: technical-docs/server-info.md
