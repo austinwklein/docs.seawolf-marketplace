@@ -17,7 +17,7 @@ PM2 is a Node.js process manager that:
 - **Simple**: Easy to configure and manage
 - **Reliable**: Battle-tested in production
 
-**Alternative**: systemd service files (more complex but more powerful)
+**Alternative**: systemd service files (more complex but more powerful, also requires root access)
 
 ## PM2 processes for Seawolf Marketplace
 
