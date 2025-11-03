@@ -11,27 +11,27 @@ test.swe.ajklein.io (rapid iteration, experimental features)
     ↓ (git push to dev branch)
 dev.swe.ajklein.io (pre-production validation, team review)
     ↓ (git push to prod branch)
-swe.ajklein.io (production, graded by instructors)
+swe.ajklein.io (production)
 ```
 
 ## Environment isolation
 
 Each environment is completely isolated:
 
-| Component | Test | Dev | Prod |
-|-----------|------|-----|------|
-| **Git branch** | test | dev | prod |
-| **URL** | test.swe.ajklein.io | dev.swe.ajklein.io | swe.ajklein.io |
-| **Directory** | /opt/.../test/ | /opt/.../dev/ | /opt/.../prod/ |
-| **Backend port** | 3000 | 3001 | 3002 |
-| **PM2 process** | backend-test | backend-dev | backend-prod |
-| **Database** | seawolf_test | seawolf_dev | seawolf_prod |
-| **Deploy user** | deploy-test | deploy-dev | deploy-prod |
-| **Backend user** | deploy-test | deploy-dev | deploy-prod |
-| **Nginx config** | 11-test_* | 12-dev_* | 20-swe_* |
+| Component | Test | Dev | Prod                  |
+|-----------|------|-----|-----------------------|
+| **Git branch** | test | dev | prod                  |
+| **URL** | test.swe.ajklein.io | dev.swe.ajklein.io | swe.ajklein.io        |
+| **Directory** | /opt/.../test/ | /opt/.../dev/ | /opt/.../prod/        |
+| **Backend port** | 3000 | 3001 | 3002                  |
+| **PM2 process** | backend-test | backend-dev | backend-prod          |
+| **Database** | test | dev | seawolfmarketplace    |
+| **Deploy user** | deploy-test | deploy-dev | deploy-prod           |
+| **Backend user** | deploy-test | deploy-dev | deploy-prod           |
+| **Nginx config** | 11-test_* | 12-dev_* | 20-swe_*              |
 | **SSL cert** | swe.ajklein.io wildcard | swe.ajklein.io wildcard | swe.ajklein.io (main) |
 
-**Key point**: Deploying to one environment never affects the others.
+**Key point**: Deploying to one environment should never affects the others.
 
 ## Environment promotion workflow
 
@@ -73,8 +73,7 @@ When dev is approved:
 1. Merge dev into prod: `git checkout prod && git merge dev`
 2. Push to prod: `git push origin prod`
 3. Manually trigger deployment to prod (select `prod` branch and `Prod Site`)
-4. Notify instructors/team that prod is live
-5. Monitor for issues
+4. Monitor for issues
 
 ## Environment variables
 
@@ -83,17 +82,17 @@ Each environment has its own `.env` file:
 ```bash
 # /opt/seawolf-marketplace/test/backend/.env
 NODE_ENV=test
-DATABASE_URL=postgresql://user:password@localhost/seawolf_test
+DATABASE_URL=postgresql://user:password@localhost/test
 PORT=3000
 
 # /opt/seawolf-marketplace/dev/backend/.env
 NODE_ENV=dev
-DATABASE_URL=postgresql://user:password@localhost/seawolf_dev
+DATABASE_URL=postgresql://user:password@localhost/dev
 PORT=3001
 
 # /opt/seawolf-marketplace/prod/backend/.env
 NODE_ENV=prod
-DATABASE_URL=postgresql://user:password@localhost/seawolf_prod
+DATABASE_URL=postgresql://user:password@localhost/seawolfmarketplace
 PORT=3002
 ```
 
@@ -110,19 +109,19 @@ mkdir -p /opt/seawolf-marketplace/{test,dev,prod}/backend
 # Create .env files for each environment
 cat > /opt/seawolf-marketplace/test/backend/.env << EOF
 NODE_ENV=test
-DATABASE_URL=postgresql://postgres:password@localhost/seawolf_test
+DATABASE_URL=postgresql://postgres:password@localhost/test
 PORT=3000
 EOF
 
 cat > /opt/seawolf-marketplace/dev/backend/.env << EOF
 NODE_ENV=dev
-DATABASE_URL=postgresql://postgres:password@localhost/seawolf_dev
+DATABASE_URL=postgresql://postgres:password@localhost/dev
 PORT=3001
 EOF
 
 cat > /opt/seawolf-marketplace/prod/backend/.env << EOF
 NODE_ENV=prod
-DATABASE_URL=postgresql://postgres:password@localhost/seawolf_prod
+DATABASE_URL=postgresql://postgres:password@localhost/seawolfmarketplace
 PORT=3002
 EOF
 
@@ -150,11 +149,11 @@ If backend configuration needs to change (e.g., adding a new API key):
 
 Three separate PostgreSQL databases exist:
 
-| Database | Purpose | Data |
-|----------|---------|------|
-| `seawolf_test` | Testing, rapid iteration | Test data, can be reset |
-| `seawolf_dev` | Pre-production validation | Data mirrors prod structure |
-| `seawolf_prod` | Production | Live data, student listings and accounts |
+| Database             | Purpose                   | Data                                     |
+|----------------------|---------------------------|------------------------------------------|
+| `test`               | Testing, rapid iteration  | Test data, can be reset                  |
+| `dev`                | Pre-production validation | Data mirrors prod structure              |
+| `seawolfmarketplace` | Production                | Live data, student listings and accounts |
 
 ### Database connection
 
@@ -166,7 +165,7 @@ postgresql://username:password@host:port/database_name
 
 Example:
 ```
-postgresql://postgres:my_password@127.0.0.1:5432/seawolf_prod
+postgresql://postgres:my_password@127.0.0.1:5432/seawolfmarketplace
 ```
 
 ### Database initialization
@@ -190,10 +189,10 @@ Connect to a specific database:
 
 ```bash
 # Connect to test database
-psql -U postgres -d seawolf_test
+psql -U postgres -d test
 
 # Connect to prod database
-psql -U postgres -d seawolf_prod
+psql -U postgres -d seawolfmarketplace
 
 # List all databases
 psql -U postgres -l
@@ -210,13 +209,13 @@ psql -U postgres -l
 
 ```bash
 # Backup a database
-pg_dump -U postgres seawolf_prod > seawolf_prod_backup.sql
+pg_dump -U postgres seawolfmarketplace > seawolfmarketplace_backup.sql
 
 # Backup all databases
 pg_dumpall -U postgres > all_databases_backup.sql
 
 # Restore from backup
-psql -U postgres -d seawolf_prod < seawolf_prod_backup.sql
+psql -U postgres -d seawolfmarketplace < seawolfmarketplace_backup.sql
 ```
 
 ## Git branch strategy
@@ -254,7 +253,7 @@ This can be enforced in GitHub:
 
 ### User traffic
 
-- Production users access **swe.ajklein.io** → served by `backend-prod` and `seawolf_prod` database
+- Production users access **swe.ajklein.io** → served by `backend-prod` and `seawolfmarketplace` database
 - Team testing uses **test.swe.ajklein.io** and **dev.swe.ajklein.io**
 - Each environment has separate user accounts and listings
 
@@ -302,7 +301,7 @@ Pre-production, so more caution needed. Notify the team before making changes.
 2. **Investigate**: Check logs and determine root cause
 3. **Fix**: Either hotfix in prod branch or rollback to previous version
 4. **Deploy**: Once fixed, test in test/dev first, then redeploy to prod
-5. **Post-mortem**: Discuss what went wrong and how to prevent it
+5. **Post-mortem**: Discuss what went wrong and how to prevent it, test thoroughly in test -> dev -> prod
 
 ## Environment-specific configurations
 
@@ -339,9 +338,9 @@ pm2 list
 sudo nginx -t
 
 # Check database connections
-psql -U postgres -d seawolf_prod -c "SELECT version();"
-psql -U postgres -d seawolf_dev -c "SELECT version();"
-psql -U postgres -d seawolf_test -c "SELECT version();"
+psql -U postgres -d seawolfmarketplace -c "SELECT version();"
+psql -U postgres -d dev -c "SELECT version();"
+psql -U postgres -d test -c "SELECT version();"
 ```
 
 ### Monitor specific environment
@@ -357,5 +356,5 @@ pm2 logs backend-test --lines 50
 /opt/utils/pm2_errors.view --target dev
 
 # Prod database connectivity
-psql -U postgres -d seawolf_prod -c "SELECT COUNT(*) FROM users;"
+psql -U postgres -d seawolfmarketplace -c "SELECT COUNT(*) FROM users;"
 ```
