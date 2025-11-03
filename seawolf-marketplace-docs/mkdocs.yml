@@ -28,6 +28,12 @@ theme:
 
   logo: assets/1200px-Alaska_Anchorage_Seawolves_logo.svg.png    # optional logo (put under docs/assets)
   favicon: assets/favicon.ico
+  
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.annotate
+    - content.code.copy
 
 extra_css:
   - stylesheets/uaa.css
@@ -79,5 +85,8 @@ markdown_extensions:
       custom_checkbox: false
       clickable_checkbox: true
   - pymdownx.superfences
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
