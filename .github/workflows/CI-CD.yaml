@@ -26,6 +26,7 @@ jobs:
             DOCS_DIR=/opt/seawolf-marketplace/docs
             REPO_URL=ssh://git@github.com/${{ github.repository }}.git
             BRANCH=main
+            MKDOCS_PROJECT_DIR="$DOCS_DIR/seawolf-marketplace-docs"
             
             echo "=== Deploying documentation ==="
             
@@ -49,7 +50,8 @@ jobs:
             # Install/upgrade MkDocs Material if needed
             pip3 install --user --upgrade mkdocs-material
             
-            # Build the documentation site
+            # Navigate to the mkdocs project directory and build
+            cd "$MKDOCS_PROJECT_DIR"
             ~/.local/bin/mkdocs build --clean
             
             # Set correct permissions
@@ -59,4 +61,5 @@ jobs:
             
             # Verification
             echo "=== Deployment verification ==="
-            echo "Site directory: $(ls -la
+            echo "Site directory: $(ls -la $MKDOCS_PROJECT_DIR/site | head -5)"
+            echo "Documentation deployed successfully at $(date)"
