@@ -11,7 +11,7 @@ repository-root/
 
 ## Triggering a deployment
 
-### Via GitHub UI (recommended)
+### Via GitHub UI
 
 1. Go to your GitHub repository
 2. Click **Actions** tab
@@ -21,14 +21,6 @@ repository-root/
    - **Branch**: Which code branch to deploy (`test`, `dev`, or `prod`)
    - **Environment**: Where to deploy (`Test Site`, `Dev Site`, or `Prod Site`)
 6. Click **Run workflow**
-
-### Via GitHub CLI
-
-```bash
-gh workflow run angular-deploy.yml \
-  -f branch=test \
-  -f environment="Test Site"
-```
 
 ## Workflow inputs
 
@@ -312,11 +304,11 @@ After starting a deployment:
 The workflow has access to:
 
 ```yaml
-- ${{ github.repository }}     # repository owner/name
-- ${{ inputs.branch }}         # user-selected branch
-- ${{ inputs.environment }}    # user-selected environment
-- ${{ secrets.HOST }}          # VPS hostname/IP
-- ${{ secrets.PORT }}          # SSH port
+- ${{ github.repository }}        # repository owner/name
+- ${{ inputs.branch }}            # user-selected branch
+- ${{ inputs.environment }}       # user-selected environment
+- ${{ secrets.HOST }}             # VPS hostname/IP
+- ${{ secrets.PORT }}             # SSH port
 - ${{ secrets.SSH_PRIVATE_KEY }}  # Private SSH key
 ```
 
