@@ -554,11 +554,11 @@ sudo certbot certificates
 
 ## Emergency contacts
 
-| Role | Responsibility |
-|------|-----------------|
+| Role   | Responsibility                                    |
+|--------|---------------------------------------------------|
 | Austin | Server infrastructure, PM2, database, deployments |
-| Jacob | Deployment approval, code merging |
-| Wa | Frontend/backend code issues |
-| Hunter | UI/UX issues |
+| Jacob  | Deployment approval, code merging                 |
+| Wa     | Frontend/backend code issues                      |
+| Hunter | UI/UX issues                                      |
 
 Reach out to relevant person for issues in their area.
