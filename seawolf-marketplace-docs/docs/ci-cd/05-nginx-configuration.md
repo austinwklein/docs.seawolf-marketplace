@@ -13,14 +13,13 @@ Three virtual hosts run simultaneously, one per environment.
 
 ```
 /etc/nginx/
-├── nginx.conf                    (main configuration file)
-└── sites-enabled.d/              (environment-specific configs)
-    ├── 05-tls.conf              (SSL/TLS settings)
+├── nginx.conf                          (main configuration file)
+└── sites-enabled.d/                    (Where Nginx loads configs from: Symlinks to available configs)
+    ├── 05-tls.conf                     (SSL/TLS settings)
     ├── 10-docs_swe_ajklein_io.conf
     ├── 11-test_swe_ajklein_io.conf
     ├── 12-dev_swe_ajklein_io.conf
-    ├── 20-swe_ajklein_io.conf
-    └── 99-__swe_ajklein_io.conf
+    └── 20-swe_ajklein_io.conf
 ```
 
 The numeric prefixes control load order (lower numbers load first).
@@ -189,7 +188,7 @@ When a request comes in (e.g., `/index.html`), Nginx:
 
 ## Test/Dev virtual hosts
 
-Test (11-test_swe_ajklein_io.conf) and Dev (12-dev_swe_ajklein_io.conf) follow the same pattern, with different ports and root directories:
+Test, Dev, and Prod follow the same pattern, with different ports and root directories:
 
 | Environment | Port | Root Directory |
 |---|---|---|
@@ -208,7 +207,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/swe.ajklein.io/privkey.pem;
     
     location /api/ {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:3000;  # {3000|3001|3002}
         # ... proxy headers ...
     }
     
@@ -225,7 +224,7 @@ server {
 1. Browser sends HTTPS request
 2. Nginx receives on port 443
 3. Matches server block for `swe.ajklein.io`
-4. Request path is `/listings` (not `/api/`)
+4. Request path is `/listings`
 5. Nginx serves from root directory: `/usr/share/nginx/SWE/prod_root/`
 6. Browser receives `index.html` (Angular's router handles the path client-side)
 
@@ -247,7 +246,7 @@ server {
 # Check syntax
 sudo nginx -t
 
-# Reload config without restarting
+# Reload config without restarting (only if nginx -t passes)
 sudo systemctl reload nginx
 
 # Or restart if needed
@@ -300,7 +299,7 @@ ls -la /usr/share/nginx/SWE/
 # prod_root -> /opt/seawolf-marketplace/prod/frontend/dist/frontend/browser
 ```
 
-If a symlink points to the wrong directory, manually update it:
+If a symlink points to the wrong directory, manually update it for testing and then add to scripts for deployment:
 
 ```bash
 ln -sfn /opt/seawolf-marketplace/prod/frontend/dist/frontend/browser /usr/share/nginx/SWE/prod_root
@@ -310,11 +309,11 @@ Then verify with `ls -la` again.
 
 ## Performance tuning
 
-For a class project, the current Nginx configuration is sufficient. Future optimizations:
+For the scope of this project, the current Nginx configuration is sufficient. Future optimizations:
 
 - **Gzip compression**: Reduce file sizes for faster downloads
 - **Browser caching**: Set cache headers for static files
 - **Load balancing**: Distribute traffic across multiple backend servers
-- **Rate limiting**: Prevent abuse
+- **Rate limiting**: Prevent abuse and malicious requests
 
 These can be added to Nginx config as needed.
