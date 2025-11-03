@@ -77,7 +77,7 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.tasklist:
       custom_checkbox: false
-      clickable_checkbox: false
+      clickable_checkbox: true
   - pymdownx.superfences
   - pymdownx.highlight
   - pymdownx.inlinehilite
