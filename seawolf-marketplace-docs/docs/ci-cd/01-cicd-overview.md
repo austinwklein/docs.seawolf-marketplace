@@ -15,7 +15,7 @@ The pipeline orchestrates:
 
 ## Why manual trigger?
 
-For a class project, **manual deployment gives the team explicit control** over when code goes live. This prevents accidental deployments and ensures team alignment before production deployments.
+**Manual deployment gives the team explicit control** over when code goes live. This prevents accidental deployments and ensures team alignment before production deployments.
 
 Automatic deployment on commit could be added in the future if desired.
 
@@ -33,14 +33,16 @@ Automatic deployment on commit could be added in the future if desired.
 
 ## Three-environment promotion path
 
+Note: Test and Dev would typically be behind either an authentication platform or not accessible to the public. For the sake of this project, a design decision was made to make them public-facing.
+
 ```
 Developer's Machine (local)
     ↓
-test branch / test.swe.ajklein.io (rapid iteration)
+test branch / test.swe.ajklein.io (Rapid Iteration or Testing)
     ↓
-dev branch / dev.swe.ajklein.io (pre-production validation)
+dev branch / dev.swe.ajklein.io (Pre-Production Validation)
     ↓
-prod branch / swe.ajklein.io (graded by instructors)
+prod branch / swe.ajklein.io (Intended for Live Release)
 ```
 
 Each environment has:
