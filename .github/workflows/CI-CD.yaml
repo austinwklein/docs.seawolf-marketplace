@@ -1,0 +1,77 @@
+name: MkDocs Documentation Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - test
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Determine environment based on branch
+      - name: Set environment from branch
+        id: set_env
+        run: |
+          case "${{ github.ref_name }}" in
+            main) echo "environment=prod" >> $GITHUB_OUTPUT ;;
+            dev) echo "environment=dev" >> $GITHUB_OUTPUT ;;
+            test) echo "environment=test" >> $GITHUB_OUTPUT ;;
+            *) echo "environment=test" >> $GITHUB_OUTPUT ;;
+          esac
+      
+      - name: Checkout documentation repository
+        uses: actions/checkout@v4
+
+      # Deploy MkDocs site to server
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: deploy-docs
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            # Configuration
+            ENV=${{ steps.set_env.outputs.environment }}
+            DOCS_DIR=/opt/seawolf-marketplace/docs/$ENV
+            REPO_URL=ssh://git@github.com/${{ github.repository }}.git
+            BRANCH=${{ github.ref_name }}
+            
+            echo "=== Deploying documentation for $ENV environment ==="
+            
+            # Create docs directory if it doesn't exist
+            mkdir -p "$DOCS_DIR"
+            
+            # Git operations - clone or update repository
+            cd "$DOCS_DIR"
+            if [ ! -d .git ]; then
+              echo "Cloning repository..."
+              git clone -b "$BRANCH" "$REPO_URL" .
+            else
+              echo "Updating existing repository..."
+              git fetch origin
+              git checkout -f "$BRANCH"
+              git reset --hard origin/"$BRANCH"
+            fi
+            
+            echo "=== Building MkDocs site ==="
+            
+            # Install/upgrade MkDocs Material if needed
+            pip3 install --user --upgrade mkdocs-material
+            
+            # Build the documentation site
+            ~/.local/bin/mkdocs build --clean
+            
+            # Set correct permissions
+            echo "=== Setting permissions ==="
+            chown -R deploy-docs:deploy-docs "$DOCS_DIR"
+            chmod -R 755 "$DOCS_DIR"
+            
+            # Verification
+            echo "=== Deployment verification ==="
+            echo "Site directory: $(ls -la $DOCS_DIR/site | head -5)"
+            echo "Documentation deployed successfully to $ENV at $(date)"
