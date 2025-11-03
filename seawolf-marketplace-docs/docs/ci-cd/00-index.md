@@ -118,11 +118,11 @@ Welcome to the Seawolf Marketplace CI/CD Pipeline documentation. This guide cove
 
 ### Environments
 
-| Environment | URL | Purpose | Branch |
-|---|---|---|---|
-| **Test** | test.swe.ajklein.io | Rapid iteration, experimental | test |
-| **Dev** | dev.swe.ajklein.io | Pre-production validation | dev |
-| **Prod** | swe.ajklein.io | Public-facing, graded | prod |
+| Environment | URL                 | Purpose                       | Branch |
+|-------------|---------------------|-------------------------------|--------|
+| **Test**    | test.swe.ajklein.io | Rapid iteration, experimental | test   |
+| **Dev**     | dev.swe.ajklein.io  | Pre-production validation     | dev    |
+| **Prod**    | swe.ajklein.io      | Public-facing                 | prod   |
 
 Each environment is completely isolated with separate processes, databases, and code.
 

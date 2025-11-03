@@ -223,15 +223,15 @@ psql -U postgres -d seawolfmarketplace < seawolfmarketplace_backup.sql
 ### Branch naming
 
 - `test`: Always deployable, latest experimental code
-- `dev`: Pre-production, team-reviewed code
-- `prod`: Production, graded code
+- `dev`: Pre-production, team-reviewed and tested code
+- `prod`: Production
 
 ### Merging strategy
 
 ```
-feature-branch → test → dev → prod
-    ↓              ↓       ↓      ↓
-  (local)    (testing)  (review) (grading)
+feature-branch   →   test    →    dev    →    prod
+       ↓               ↓           ↓            ↓
+    (local)        (testing)  (pre-release)  (public)
 ```
 
 1. **Feature branch**: Develop and test locally
