@@ -5,38 +5,38 @@
 The CI/CD pipeline compiles both frontend (Angular) and backend (Express/Node.js) from source code to runnable artifacts.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                GitHub Repository                           │
-│  (TypeScript, Angular, Express source code)               │
-└──────────────────────┬──────────────────────────────────────┘
-                       │ (GitHub Actions runner checks out)
-                       ↓
-           ┌───────────────────────────┐
-           │   Frontend Build          │
-           │ (Angular CLI: ng build)   │
-           │                           │
-           │ Input: /frontend/src/     │
-           │ Output: dist/browser/     │
-           │ Format: Static files      │
-           │ (HTML, CSS, JS, assets)   │
-           └───────────┬───────────────┘
-                       │
-           ┌───────────v───────────────┐
-           │   Backend Build           │
-           │ (TypeScript: tsc compile) │
-           │                           │
-           │ Input: /backend/src/      │
-           │ Output: *.js files        │
-           │ Format: JavaScript        │
-           └───────────┬───────────────┘
-                       │
-                       ↓
-        ┌──────────────────────────────┐
-        │   Deploy to VPS              │
-        │ - Symlink frontend to Nginx  │
-        │ - Restart PM2 backend        │
-        │ - Go live                    │
-        └──────────────────────────────┘
+┌───────────────────────────────────────────────────┐
+│                GitHub Repository                  │
+│  (TypeScript, Angular, Express source code)       │
+└────────────────────────┬──────────────────────────┘
+                         ↓                
+         (GitHub Actions runner checks out)
+                         ↓                  
+          ┌──────────────────────────────┐
+          │   Frontend Build             │
+          │ (Angular CLI: ng build)      │
+          │                              │
+          │ Input: /frontend/src/        │
+          │ Output: dist/browser/        │
+          │ Format: Static files         │
+          │ (HTML, CSS, JS, assets)      │
+          └──────────────┬───────────────┘
+                         ↓     
+          ┌──────────────────────────────┐
+          │   Backend Build              │
+          │ (TypeScript: `tsc compile`)  │
+          │                              │
+          │ Input: /backend/src/         │
+          │ Output: *.js files           │
+          │ Format: JavaScript           │
+          └──────────────┬───────────────┘
+                         ↓  
+          ┌──────────────────────────────┐
+          │   Deploy to VPS              │
+          │ - Symlink frontend to Nginx  │
+          │ - Restart PM2 backend        │
+          │ - Go live                    │
+          └──────────────────────────────┘
 ```
 
 ## Frontend build pipeline
@@ -115,13 +115,13 @@ ng build --configuration=production
 
 Angular build produces multiple JavaScript bundles to optimize loading:
 
-| File | Purpose |
-|------|---------|
-| `main.*.js` | Application code |
+| File             | Purpose                                      |
+|------------------|----------------------------------------------|
+| `main.*.js`      | Application code                             |
 | `polyfills.*.js` | Browser compatibility (IE11, older browsers) |
-| `styles.*.css` | Global styles |
-| `runtime.*.js` | Angular runtime |
-| `vendor.*.js` | Third-party libraries |
+| `styles.*.css`   | Global styles                                |
+| `runtime.*.js`   | Angular runtime                              |
+| `vendor.*.js`    | Third-party libraries                        |
 
 **Versioning**: Hash in filename (e.g., `main.abc123.js`) for cache busting. When code changes, hash changes, forcing browsers to reload.
 
@@ -136,13 +136,13 @@ Angular build produces multiple JavaScript bundles to optimize loading:
 
 ### Common frontend build errors
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `npm ERR! 404 Not Found` | Package not in npm registry | Check package name spelling in `package.json` |
-| `ERROR in src/app/...ts` | TypeScript compilation error | Fix TypeScript errors; check variable names, types |
-| `ERROR: The Angular Compiler is not installed` | Angular CLI not installed | Run `npm ci` to install dependencies |
-| `Exceeds size budget` | Bundle too large | Remove unused dependencies or optimize component imports |
-| `Permission denied` | npm cache corrupted | Run `npm cache verify` or `npm cache clean --force` |
+| Error                                          | Cause                        | Solution                                                 |
+|------------------------------------------------|------------------------------|----------------------------------------------------------|
+| `npm ERR! 404 Not Found`                       | Package not in npm registry  | Check package name spelling in `package.json`            |
+| `ERROR in src/app/...ts`                       | TypeScript compilation error | Fix TypeScript errors; check variable names, types       |
+| `ERROR: The Angular Compiler is not installed` | Angular CLI not installed    | Run `npm ci` to install dependencies                     |
+| `Exceeds size budget`                          | Bundle too large             | Remove unused dependencies or optimize component imports |
+| `Permission denied`                            | npm cache corrupted          | Run `npm cache verify` or `npm cache clean --force`      |
 
 ## Backend build pipeline
 
@@ -259,13 +259,13 @@ The Node.js runtime executes the compiled `.js` files. TypeScript is not needed 
 
 ### Common backend build errors
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `error TS2307: Cannot find module` | Missing import or wrong path | Check import statement; verify file exists |
-| `error TS2345: Argument of type 'X' is not assignable to parameter of type 'Y'` | Type mismatch | Fix variable type or function signature |
-| `error TS2304: Cannot find name 'X'` | Undefined variable or typo | Check spelling; import if from another file |
-| `npm ERR! 404 Not Found` | Dependency not in npm registry | Fix package name in `package.json` |
-| `Permission denied` | Cannot write to `dist/` directory | Check file permissions; ensure deploy user can write |
+| Error                                                                           | Cause                             | Solution                                             |
+|---------------------------------------------------------------------------------|-----------------------------------|------------------------------------------------------|
+| `error TS2307: Cannot find module`                                              | Missing import or wrong path      | Check import statement; verify file exists           |
+| `error TS2345: Argument of type 'X' is not assignable to parameter of type 'Y'` | Type mismatch                     | Fix variable type or function signature              |
+| `error TS2304: Cannot find name 'X'`                                            | Undefined variable or typo        | Check spelling; import if from another file          |
+| `npm ERR! 404 Not Found`                                                        | Dependency not in npm registry    | Fix package name in `package.json`                   |
+| `Permission denied`                                                             | Cannot write to `dist/` directory | Check file permissions; ensure deploy user can write |
 
 ## Database initialization
 
@@ -295,7 +295,7 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'seawolf_' || :'ENV')
 \gexec
 ```
 
-Or for specific environment:
+Or for a specific environment:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS seawolf_prod;
@@ -363,11 +363,11 @@ CREATE TABLE users (...);
 CREATE TABLE IF NOT EXISTS users (...);
 ```
 
-This allows redeployments without manual database cleanup.
+This allows redeployments without a manual database cleanup.
 
 ## Build artifacts
 
-After builds complete, artifacts are ready for deployment:
+After builds are complete, artifacts are ready for deployment:
 
 ### Frontend artifacts
 
