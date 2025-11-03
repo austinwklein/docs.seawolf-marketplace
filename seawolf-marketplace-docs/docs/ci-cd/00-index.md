@@ -281,7 +281,7 @@ A: See [Triggering Deployments](03-github-actions-workflow.md#triggering-a-deplo
 A: See [Troubleshooting](08-troubleshooting.md). Check GitHub Actions logs for error message.
 
 **Q: Can I deploy directly to production?**
-A: Yes, but we recommend testing in test/dev first to catch issues early.
+A: Yes, but we recommend testing in test/dev first to catch issues early. Test is for rapid iteration or testing ideas, dev is for pre-production validation and should be treated as if it is production.
 
 **Q: How long does deployment take?**
 A: Typically 2-5 minutes. Depends on build times and network speed.
