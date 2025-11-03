@@ -250,20 +250,19 @@ See: [Troubleshooting Guide](08-troubleshooting.md)
 
 - [ ] Tested in test environment ✓
 - [ ] Tested in dev environment ✓
-- [ ] Team approved changes
-- [ ] Ready for grading/public release
-- [ ] Jacob approved deployment
+- [ ] Ready for public release
+- [ ] Jacob pushes to prod
 
 ## Support
 
 ### Who to contact
 
-| Issue | Contact |
-|-------|---------|
-| Deployment/infrastructure | Austin |
-| Frontend code | Wa |
-| UI/UX/styling | Hunter |
-| Project management | Jacob |
+| Issue                     | Contact |
+|---------------------------|---------|
+| Deployment/infrastructure | Austin  |
+| Frontend code             | Wa      |
+| UI/UX/styling             | Hunter  |
+| Project management        | Jacob   |
 
 ### Resources
 
