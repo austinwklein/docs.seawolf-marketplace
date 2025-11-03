@@ -12,44 +12,56 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │              GitHub Actions (CI/CD Orchestration)               │
 │  Workflow: .github/workflows/angular-deploy.yml                 │
-│  Trigger: Manual workflow dispatch from UI                      │
+│  Trigger: Manual workflow dispatch from Github UI               │
 └────────────────────────────┬────────────────────────────────────┘
                              │ SSH to VPS as deploy-{env} user
                              ↓
-        ┌────────────────────────────────────────────────┐
-        │     Hetzner VPS (Fedora 42 Server)             │
-        │     Oregon data center                         │
-        │                                                │
+        ┌──────────────────────────────────────────────┐
+        │        ====== Infrastructure =======         │
+        │                                              │
+        │     Hetzner VPS (Fedora 42 Server)           │
+        │     Oregon data center                       │
+        │                                              │
         ├──────────────────────────────────────────────┤
-        │ /opt/seawolf-marketplace/                     │
-        │  ├─ test/       (test environment)            │
-        │  ├─ dev/        (dev environment)             │
-        │  └─ prod/       (prod environment)            │
-        │                                                │
+        │        ========= Web Root ==========         │
+        │                                              │
+        │ /opt/seawolf-marketplace/                    │
+        │  ├─ test/       (test environment)           │
+        │  ├─ dev/        (dev environment)            │
+        │  └─ prod/       (prod environment)           │
+        │                                              │
         ├──────────────────────────────────────────────┤
-        │ /usr/share/nginx/SWE/                         │
+        │        ======= Deploy Root =========         │
+        │                                              │
+        │ /usr/share/nginx/SWE/                        │
         │  ├─ test_root → /opt/.../test/frontend/...   │
         │  ├─ dev_root  → /opt/.../dev/frontend/...    │
         │  └─ prod_root → /opt/.../prod/frontend/...   │
-        │                                                │
+        │                                              │
         ├──────────────────────────────────────────────┤
-        │ Process Manager (PM2)                         │
-        │  ├─ backend-test (port 3000)                  │
-        │  ├─ backend-dev  (port 3001)                  │
-        │  └─ backend-prod (port 3002)                  │
-        │                                                │
+        │        =========== PM2 =============         │
+        │                                              │
+        │ Process Manager (PM2)                        │
+        │  ├─ backend-test (port 3000)                 │
+        │  ├─ backend-dev  (port 3001)                 │
+        │  └─ backend-prod (port 3002)                 │
+        │                                              │
         ├──────────────────────────────────────────────┤
-        │ Web Server (Nginx)                            │
-        │  ├─ test.swe.ajklein.io → port 3000           │
-        │  ├─ dev.swe.ajklein.io  → port 3001           │
-        │  └─ swe.ajklein.io      → port 3002           │
-        │                                                │
+        │        ======== Web Server =========         │
+        │                                              │
+        │ Web Server (Nginx)                           │
+        │  ├─ test.swe.ajklein.io → port 3000          │
+        │  ├─ dev.swe.ajklein.io  → port 3001          │
+        │  └─ swe.ajklein.io      → port 3002          │
+        │                                              │
         ├──────────────────────────────────────────────┤
-        │ Database (PostgreSQL)                         │
-        │  ├─ seawolf_test (test environment)           │
-        │  ├─ seawolf_dev  (dev environment)            │
-        │  └─ seawolf_prod (prod environment)           │
-        └────────────────────────────────────────────────┘
+        │        ========= Database ==========         │
+        │                                              │
+        │ Database (PostgreSQL)                        │
+        │  ├─ seawolf_test (test environment)          │
+        │  ├─ seawolf_dev  (dev environment)           │
+        │  └─ seawolf_prod (prod environment)          │
+        └──────────────────────────────────────────────┘
 ```
 
 ## Deployment users and permissions
@@ -62,7 +74,7 @@ Each environment has a dedicated Linux user for SSH access:
 | `deploy-dev` | Read/write to `/opt/seawolf-marketplace/dev/` only | Can deploy to dev environment |
 | `deploy-prod` | Read/write to `/opt/seawolf-marketplace/prod/` only | Can deploy to prod environment |
 
-These users are created without shell access (login shell is `/usr/sbin/nologin`). They can only:
+These users are created with minimal access. They are intended to:
 - Accept SSH key-based authentication
 - Execute PM2 commands for their respective processes
 - Read/write files in their respective directories
@@ -84,6 +96,7 @@ These users are created without shell access (login shell is `/usr/sbin/nologin`
 └── prod/
     └── [same structure as test]
 
+Nginx symlinks:
 /usr/share/nginx/SWE/
 ├── test_root → /opt/seawolf-marketplace/test/frontend/dist/frontend/browser/
 ├── dev_root  → /opt/seawolf-marketplace/dev/frontend/dist/frontend/browser/
@@ -98,11 +111,11 @@ Symlinks allow Nginx to serve frontend files from `/usr/share/nginx/SWE/` (Fedor
 
 Three secrets are stored in GitHub repository settings:
 
-| Secret | Purpose | Value |
-|--------|---------|-------|
-| `HOST` | VPS hostname or IP | swe.ajklein.io (or IP) |
-| `PORT` | SSH port (non-standard for security) | Custom port number |
-| `SSH_PRIVATE_KEY` | SSH private key for deploy users | Private key of deploy-{env} users |
+| Secret | Purpose                                          | Value |
+|--------|--------------------------------------------------|-------|
+| `HOST` | VPS hostname or IP                               | swe.ajklein.io (or IP) |
+| `PORT` | SSH port (non-standard for security)             | Custom port number |
+| `SSH_PRIVATE_KEY` | SSH private key for github runners to access VPS | Private key of deploy-{env} users |
 
 These secrets are passed to the GitHub Actions runner and used only during deployment. They are never logged or exposed in workflow output.
 
