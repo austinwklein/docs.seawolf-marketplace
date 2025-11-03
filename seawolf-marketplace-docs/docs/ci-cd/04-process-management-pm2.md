@@ -92,7 +92,7 @@ If a Node.js process crashes, PM2 automatically restarts it. Log in to check why
 pm2 logs backend-prod --lines 50
 
 # View error logs
-/opt/utils/pm2_errors.view --target prod
+/opt/utils/pm2.errors.view --target prod
 ```
 
 ## PM2 state persistence
@@ -158,27 +158,27 @@ Press `q` to exit.
 
 ## PM2 utility scripts
 
-Helper scripts in `/opt/utils/` simplify common operations:
-
+Helper scripts in `/opt/utils/` simplify common operations  
+All scripts default to all environments but will accept --target to specify {test|dev|prod}
 ### View errors
 
 ```bash
-./pm2_errors.view                  # View errors for all processes
-./pm2_errors.view --target prod    # View errors for specific environment
-./pm2_errors.view -n 100           # View last 100 lines
-./pm2_errors.view -t dev -n 50     # Combine options
+./pm2.errors.view                  # View errors for all processes
+./pm2.errors.view --target prod    # View errors for specific environment
+./pm2.errors.view -n 100           # View last 100 lines
+./pm2.errors.view -t dev -n 50     # Combine options
 ```
 
-Located at: `/opt/utils/pm2_errors.view`
+Located at: `/opt/utils/pm2.errors.view`
 
 ### Flush logs
 
 ```bash
-./pm2_logs.flush                   # Flush logs for all processes
-./pm2_logs.flush --target test     # Flush logs for specific environment
+./pm2.logs.flush                   # Flush logs for all processes
+./pm2.logs.flush --target test     # Flush logs for specific environment
 ```
 
-Located at: `/opt/utils/pm2_logs.flush`
+Located at: `/opt/utils/pm2.logs.flush`
 
 Use this to clean up log files that grow too large.
 
@@ -259,24 +259,24 @@ Watch the CPU and memory columns. If they keep growing, there may be a bug in th
 PM2 logs can grow large over time. Clean them up:
 
 ```bash
-/opt/utils/pm2_logs.flush --target prod
+/opt/utils/pm2.logs.flush --target prod
 ```
 
 Or flush all:
 
 ```bash
-/opt/utils/pm2_logs.flush
+/opt/utils/pm2.logs.flush
 ```
 
 ## PM2 files and locations
 
-| File/Directory | Purpose |
-|---|---|
-| `/opt/utils/pm2.restart` | Restart utility script |
-| `/opt/utils/pm2_errors.view` | View error logs script |
-| `/opt/utils/pm2_logs.flush` | Flush logs script |
-| `~/.pm2/logs/` | PM2 log files directory |
-| `~/.pm2/dump.pm2` | PM2 state persistence file |
+| File/Directory               | Purpose |
+|------------------------------|---|
+| `/opt/utils/pm2.restart`     | Restart utility script |
+| `/opt/utils/pm2.errors.view` | View error logs script |
+| `/opt/utils/pm2.logs.flush`  | Flush logs script |
+| `~/.pm2/logs/`               | PM2 log files directory |
+| `~/.pm2/dump.pm2`            | PM2 state persistence file |
 
 Most files are in the home directory of the user running PM2 (usually the deploy user or root).
 
