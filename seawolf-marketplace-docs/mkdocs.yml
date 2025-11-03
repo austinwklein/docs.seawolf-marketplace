@@ -60,7 +60,7 @@ plugins:
   - search
   # optional quality-of-life plugins
   # - mkdocstrings
-  - tags 
+  - tags
 
 markdown_extensions:
   - admonition
